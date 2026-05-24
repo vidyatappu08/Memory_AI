@@ -1,9 +1,10 @@
+import { API_URL } from './config'
 import { supabase } from './supabase'
 
 async function generateTags(content) {
   try {
-    const response = await fetch('http://localhost:3001/api/tags', {
-      method: 'POST',
+    const response = await fetch(`${API_URL}/api/tags`, { 
+    method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ content })
     })

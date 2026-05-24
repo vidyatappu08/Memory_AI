@@ -35,7 +35,7 @@ export default function ActionItems() {
         return
       }
 
-      const response = await fetch(`${API_URL}/api/chat`, {
+      const response = await fetch(`${API_URL}/api/action-items`, {
       method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ memories })
