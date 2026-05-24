@@ -4,7 +4,14 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 const app = express()
-app.use(cors())
+app.use(cors({
+  origin: [
+    'https://boisterous-puppy-ddc998.netlify.app',
+    'http://localhost:5173'
+  ],
+  methods: ['GET', 'POST'],
+  credentials: true
+}))
 app.use(express.json())
 
 async function callGroq(messages) {
@@ -95,4 +102,5 @@ ${memoriesText.slice(0, 3000)}`
     res.status(500).json({ error: err.message })
   }
 })
+
 app.listen(3001, () => console.log('Server running on port 3001'))
