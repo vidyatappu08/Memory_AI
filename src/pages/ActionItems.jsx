@@ -1,3 +1,4 @@
+import { API_URL } from '../lib/config'
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { CheckSquare, Loader, User, Calendar, AlertCircle, RefreshCw, FileText } from 'lucide-react'
@@ -34,8 +35,8 @@ export default function ActionItems() {
         return
       }
 
-      const response = await fetch('http://localhost:3001/api/action-items', {
-        method: 'POST',
+      const response = await fetch(`${API_URL}/api/chat`, {
+      method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ memories })
       })

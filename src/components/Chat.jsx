@@ -1,3 +1,4 @@
+import { API_URL } from '../lib/config'
 import { useState, useRef, useEffect } from 'react'
 import { searchMemories } from '../lib/memoryService'
 import { Send, Brain, User } from 'lucide-react'
@@ -24,7 +25,7 @@ export default function Chat() {
       const chunks = await searchMemories(question)
       const context = chunks.map(c => c.chunk_text).join('\n\n')
 
-      const response = await fetch('http://localhost:3001/api/chat', {
+      const response = await fetch(`${API_URL}/api/chat`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
