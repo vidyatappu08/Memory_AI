@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import Search from './pages/Search'
 import TimelinePage from './pages/TimeLine'
 import ActionItems from './pages/ActionItems'
+import HealthScore from './pages/HealthScore'
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
             <Route path="/search" element={<Search />} />
             <Route path="/action-items" element={<ActionItems />} />
             <Route path="/timeline" element={<TimelinePage />} />
+            <Route path="/health" element={<HealthScore />} />
           </Routes>
         </main>
       </div>

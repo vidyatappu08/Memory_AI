@@ -1,10 +1,10 @@
-import { NavLink } from 'react-router-dom'
-import { Brain, Home, Search, Clock, Sparkles, CheckSquare } from 'lucide-react'
+import { Brain, Home, Search, Clock, Sparkles, CheckSquare, Heart } from 'lucide-react'
 
 const links = [
   { to: '/', icon: Home, label: 'Dashboard' },
   { to: '/search', icon: Search, label: 'Ask Memory' },
   { to: '/action-items', icon: CheckSquare, label: 'Action Items' },
+  { to: '/health', icon: Heart, label: 'Health Score' },
   { to: '/timeline', icon: Clock, label: 'Timeline' },
 ]
 

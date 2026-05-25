@@ -26,6 +26,7 @@ export default function Home() {
   const [pasteText, setPasteText] = useState('')
   const [pasteTitle, setPasteTitle] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
+  const [selectedMemory, setSelectedMemory] = useState(null)
 
   useEffect(() => { fetchMemories() }, [])
 
@@ -67,7 +68,8 @@ export default function Home() {
     setLoading(false)
   }
 
-  async function deleteMemory(id) {
+  async function deleteMemory(id, e) {
+    e.stopPropagation()
     await supabase.from('memories').delete().eq('id', id)
     setMemories(prev => prev.filter(m => m.id !== id))
   }
@@ -196,7 +198,11 @@ export default function Home() {
               const Icon = SOURCE_ICONS[memory.source_type] || FileText
               const colorClass = SOURCE_COLORS[memory.source_type] || 'bg-gray-50 text-gray-600'
               return (
-                <div key={memory.id} className="bg-white border border-gray-200 rounded-xl p-4 flex items-start gap-4">
+                <div
+                  key={memory.id}
+                  onClick={() => setSelectedMemory(memory)}
+                  className="bg-white border border-gray-200 rounded-xl p-4 flex items-start gap-4 cursor-pointer hover:border-blue-300 hover:shadow-md transition"
+                >
                   <div className={`p-2 rounded-lg ${colorClass}`}>
                     <Icon size={18} />
                   </div>
@@ -213,7 +219,7 @@ export default function Home() {
                         {memory.tags.map((tag, i) => (
                           <span
                             key={i}
-                            onClick={() => setSearchQuery(tag)}
+                            onClick={e => { e.stopPropagation(); setSearchQuery(tag) }}
                             className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full border border-blue-100 cursor-pointer hover:bg-blue-100 transition"
                           >
                             {tag}
@@ -223,7 +229,7 @@ export default function Home() {
                     )}
                   </div>
                   <button
-                    onClick={() => deleteMemory(memory.id)}
+                    onClick={(e) => deleteMemory(memory.id, e)}
                     className="text-gray-300 hover:text-red-400 transition"
                   >
                     <Trash2 size={16} />
@@ -234,6 +240,57 @@ export default function Home() {
           </div>
         )}
       </div>
+
+      {/* Memory Detail Modal */}
+      {selectedMemory && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[80vh] flex flex-col shadow-2xl">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-100">
+              <div>
+                <h2 className="font-bold text-lg">{selectedMemory.title}</h2>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  {selectedMemory.source_type} · {new Date(selectedMemory.created_at).toLocaleDateString()}
+                </p>
+              </div>
+              <button
+                onClick={() => setSelectedMemory(null)}
+                className="text-gray-400 hover:text-gray-600 text-2xl font-light transition"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Tags */}
+            {selectedMemory.tags && selectedMemory.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1 px-6 pt-4">
+                {selectedMemory.tags.map((tag, i) => (
+                  <span key={i} className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full border border-blue-100">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Full Content */}
+            <div className="flex-1 overflow-y-auto p-6">
+              <pre className="text-sm text-gray-700 whitespace-pre-wrap font-sans leading-relaxed">
+                {selectedMemory.content}
+              </pre>
+            </div>
+
+            {/* Footer */}
+            <div className="p-4 border-t border-gray-100 flex justify-end">
+              <button
+                onClick={() => setSelectedMemory(null)}
+                className="bg-blue-600 text-white px-6 py-2 rounded-xl text-sm font-medium hover:bg-blue-700 transition"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
