@@ -248,4 +248,63 @@ ${memoriesText.slice(0, 4000)}`
     res.status(500).json({ error: err.message })
   }
 })
+app.post('/api/weekly-report', async (req, res) => {
+  try {
+    const { memories } = req.body
+
+    const memoriesText = memories.map(m =>
+      `SOURCE: ${m.title}\nDATE: ${m.created_at}\n${m.content}`
+    ).join('\n\n---\n\n')
+
+    const text = await callGroq([{
+      role: 'user',
+      content: `Generate a professional weekly team report from these memories. Return ONLY a JSON object, no markdown, no backticks:
+{
+  "week": "May 20-26, 2025",
+  "headline": "Strong progress on payments with 2 critical bugs resolved",
+  "summary": "2-3 sentence executive summary of the week",
+  "accomplished": [
+    "Completed payment page UI redesign",
+    "Fixed password reset bug on mobile"
+  ],
+  "in_progress": [
+    "Login page redesign - Sarah (due June 1)",
+    "Onboarding flow - Priya (due May 25)"
+  ],
+  "blockers": [
+    "Dark mode postponed due to capacity constraints"
+  ],
+  "decisions": [
+    "Blue color confirmed for all CTAs",
+    "Checkout flow reduced from 5 to 3 steps"
+  ],
+  "next_week": [
+    "Complete login page redesign",
+    "Start user testing for payment flow",
+    "Fix remaining mobile bugs"
+  ],
+  "team_highlights": [
+    "Rahul delivered payment UI ahead of schedule",
+    "Client Acme Corp onboarded 500 users"
+  ],
+  "metrics": {
+    "tasks_completed": 4,
+    "decisions_made": 3,
+    "bugs_fixed": 1,
+    "meetings_held": 3
+  }
+}
+
+TEAM MEMORIES:
+${memoriesText.slice(0, 4000)}`
+    }])
+
+    const cleaned = text.replace(/```json|```/g, '').trim()
+    const report = JSON.parse(cleaned)
+    res.json(report)
+  } catch (err) {
+    console.error('Weekly report error:', err.message)
+    res.status(500).json({ error: err.message })
+  }
+})
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`))

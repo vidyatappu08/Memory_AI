@@ -7,6 +7,7 @@ import ActionItems from './pages/ActionItems'
 import HealthScore from './pages/HealthScore'
 import Contradictions from './pages/Contradictions'
 import MeetingBrief from './pages/MeetingBrief'
+import WeeklyReport from './pages/WeeklyReport'
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
             <Route path="/health" element={<HealthScore />} />
             <Route path="/contradictions" element={<Contradictions />} />
             <Route path="/meeting-brief" element={<MeetingBrief />} />
+            <Route path="/weekly-report" element={<WeeklyReport />} />
           </Routes>
         </main>
       </div>
