@@ -8,6 +8,7 @@ const links = [
   { to: '/health', icon: Heart, label: 'Health Score' },
   { to: '/contradictions', icon: Zap, label: 'Contradictions' },
   { to: '/meeting-brief', icon: Calendar, label: 'Meeting Brief' },
+   { to: '/weekly-report', icon: FileText, label: 'Weekly Report' },
   { to: '/timeline', icon: Clock, label: 'Timeline' },
 ]
 
