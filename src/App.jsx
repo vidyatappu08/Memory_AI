@@ -5,6 +5,7 @@ import Search from './pages/Search'
 import TimelinePage from './pages/TimeLine'
 import ActionItems from './pages/ActionItems'
 import HealthScore from './pages/HealthScore'
+import Contradictions from './pages/Contradictions'
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
             <Route path="/action-items" element={<ActionItems />} />
             <Route path="/timeline" element={<TimelinePage />} />
             <Route path="/health" element={<HealthScore />} />
+            <Route path="/contradictions" element={<Contradictions />} />
           </Routes>
         </main>
       </div>

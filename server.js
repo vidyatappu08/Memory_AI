@@ -144,4 +144,53 @@ ${memoriesText.slice(0, 4000)}`
     res.status(500).json({ error: err.message })
   }
 })
+app.post('/api/contradictions', async (req, res) => {
+  try {
+    const { memories } = req.body
+
+    const memoriesText = memories.map(m =>
+      `SOURCE: ${m.title}\nDATE: ${m.created_at}\n${m.content}`
+    ).join('\n\n---\n\n')
+
+    const text = await callGroq([{
+      role: 'user',
+      content: `Find ALL contradictions and conflicts in these team memories. Look for:
+- Decisions that were changed without documentation
+- Different people saying opposite things
+- Tasks assigned to different people in different meetings
+- Dates or deadlines that conflict
+- Technical decisions that contradict each other
+
+Return ONLY a JSON array, no markdown, no backticks.
+
+Each contradiction must have:
+- topic: what the contradiction is about (short, 3-5 words)
+- statement_a: first statement (include source)
+- statement_b: conflicting statement (include source)
+- severity: "high", "medium", or "low"
+- recommendation: how to resolve this contradiction
+
+Example:
+[{
+  "topic": "Payment button color",
+  "statement_a": "Design Review (May 12): Primary color changed to blue across all CTAs",
+  "statement_b": "Sprint Planning (May 10): Payment page UI uses green buttons",
+  "severity": "high",
+  "recommendation": "Hold a quick sync to confirm the final color decision and update all design files"
+}]
+
+If no contradictions found, return empty array: []
+
+TEAM MEMORIES:
+${memoriesText.slice(0, 4000)}`
+    }])
+
+    const cleaned = text.replace(/```json|```/g, '').trim()
+    const contradictions = JSON.parse(cleaned)
+    res.json({ contradictions })
+  } catch (err) {
+    console.error('Contradictions error:', err.message)
+    res.status(500).json({ error: err.message })
+  }
+})
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
