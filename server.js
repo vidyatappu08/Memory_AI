@@ -193,4 +193,59 @@ ${memoriesText.slice(0, 4000)}`
     res.status(500).json({ error: err.message })
   }
 })
+app.post('/api/meeting-brief', async (req, res) => {
+  try {
+    const { topic, memories } = req.body
+
+    const memoriesText = memories.map(m =>
+      `SOURCE: ${m.title}\nDATE: ${m.created_at}\n${m.content}`
+    ).join('\n\n---\n\n')
+
+    const text = await callGroq([{
+      role: 'user',
+      content: `You are a smart meeting assistant. Generate a pre-meeting briefing for a meeting about: "${topic}"
+
+Search through these team memories and extract ONLY what's relevant to this meeting topic.
+
+Return ONLY a JSON object, no markdown, no backticks:
+{
+  "meeting_topic": "${topic}",
+  "relevance_score": 85,
+  "last_discussed": "May 15, 2025",
+  "key_context": [
+    "Rahul suggested blue color for payment button in last design review",
+    "Sarah owns login page redesign with June 1st deadline"
+  ],
+  "open_items": [
+    "Password reset bug on iOS still unresolved - assigned to John",
+    "Dark mode feature was postponed to next sprint"
+  ],
+  "decisions_made": [
+    "Blue color confirmed for all CTAs (May 12)",
+    "Checkout flow reduced from 5 to 3 steps"
+  ],
+  "people_involved": ["Rahul", "Sarah", "John", "Priya"],
+  "suggested_agenda": [
+    "Review open items from last meeting (5 min)",
+    "Confirm button color decision (10 min)",
+    "Update on password reset bug fix (5 min)",
+    "Next steps and assignments (10 min)"
+  ],
+  "warning": "Sarah's deadline was June 1st — check if login page is complete before this meeting"
+}
+
+If topic is not found in memories, still return the JSON with empty arrays and relevance_score of 0.
+
+TEAM MEMORIES:
+${memoriesText.slice(0, 4000)}`
+    }])
+
+    const cleaned = text.replace(/```json|```/g, '').trim()
+    const brief = JSON.parse(cleaned)
+    res.json(brief)
+  } catch (err) {
+    console.error('Meeting brief error:', err.message)
+    res.status(500).json({ error: err.message })
+  }
+})
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`))

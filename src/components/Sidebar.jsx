@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { Brain, Home, Search, Clock, Sparkles, CheckSquare, Heart, Zap } from 'lucide-react'
+import { Brain, Home, Search, Clock, Sparkles, CheckSquare, Heart, Zap, Calendar } from 'lucide-react'
 
 const links = [
   { to: '/', icon: Home, label: 'Dashboard' },
@@ -7,6 +7,7 @@ const links = [
   { to: '/action-items', icon: CheckSquare, label: 'Action Items' },
   { to: '/health', icon: Heart, label: 'Health Score' },
   { to: '/contradictions', icon: Zap, label: 'Contradictions' },
+  { to: '/meeting-brief', icon: Calendar, label: 'Meeting Brief' },
   { to: '/timeline', icon: Clock, label: 'Timeline' },
 ]
 

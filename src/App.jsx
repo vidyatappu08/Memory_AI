@@ -6,6 +6,7 @@ import TimelinePage from './pages/TimeLine'
 import ActionItems from './pages/ActionItems'
 import HealthScore from './pages/HealthScore'
 import Contradictions from './pages/Contradictions'
+import MeetingBrief from './pages/MeetingBrief'
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
             <Route path="/timeline" element={<TimelinePage />} />
             <Route path="/health" element={<HealthScore />} />
             <Route path="/contradictions" element={<Contradictions />} />
+            <Route path="/meeting-brief" element={<MeetingBrief />} />
           </Routes>
         </main>
       </div>
