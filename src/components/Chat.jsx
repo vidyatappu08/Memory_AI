@@ -1,7 +1,7 @@
-import { API_URL } from '../lib/config'
 import { useState, useRef, useEffect } from 'react'
 import { searchMemories } from '../lib/memoryService'
 import { Send, Brain, User } from 'lucide-react'
+import { API_URL } from '../lib/config'
 
 export default function Chat() {
   const [messages, setMessages] = useState([])
@@ -14,11 +14,10 @@ export default function Chat() {
   }, [messages])
 
   async function askQuestion() {
-    if (!input.trim()) return
-    const question = input
+    const question = input.trim()
+    if (!question) return
     setInput('')
     setLoading(true)
-
     setMessages(prev => [...prev, { role: 'user', text: question }])
 
     try {
@@ -33,7 +32,7 @@ export default function Chat() {
           max_tokens: 1000,
           messages: [{
             role: 'user',
-            content: `You are a team memory assistant. Answer the question using ONLY the context below. Always mention which source the info came from. Be concise and helpful.\n\nCONTEXT FROM TEAM MEMORIES:\n${context}\n\nQUESTION: ${question}`
+            content: `You are a team memory assistant. Answer using ONLY the context below. Always mention sources.\n\nCONTEXT:\n${context}\n\nQUESTION: ${question}`
           }]
         })
       })
@@ -60,7 +59,6 @@ export default function Chat() {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Messages */}
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
         {messages.length === 0 && (
           <div className="text-center mt-20">
@@ -68,9 +66,7 @@ export default function Chat() {
               <Brain className="text-blue-600" size={32} />
             </div>
             <p className="font-semibold text-gray-700 text-lg">Ask anything about your team</p>
-            <p className="text-gray-400 text-sm mt-2">
-              Your AI assistant has access to all saved memories
-            </p>
+            <p className="text-gray-400 text-sm mt-2">Type your question and press Enter</p>
           </div>
         )}
 
@@ -123,10 +119,10 @@ export default function Chat() {
             </div>
           </div>
         )}
+
         <div ref={bottomRef} />
       </div>
 
-      {/* Input */}
       <div className="p-4 bg-white border-t border-gray-100">
         <div className="flex gap-2 bg-gray-50 border border-gray-200 rounded-2xl p-2">
           <input
@@ -139,7 +135,7 @@ export default function Chat() {
           <button
             onClick={askQuestion}
             disabled={loading || !input.trim()}
-            className="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 disabled:opacity-40 transition flex items-center gap-2"
+            className="bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 disabled:opacity-40 transition"
           >
             <Send size={16} />
           </button>
